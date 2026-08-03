@@ -1373,4 +1373,16 @@ config TOUCHSCREEN_DOUBLETAP2WAKE
 	bool "DoubleTap2Wake for touchscreens"
 	default n
 
+
+
+config TOUCHSCREEN_COMMON
+	bool "Common touchscreen interface to interact with userspace"
+	default y
+	help
+	  Say Y here if you want to control touchpanel features via
+	  /sys/touchpanel.
+
+	  If unsure, say N.
+
 endif
+
