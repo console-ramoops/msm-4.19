@@ -1,20 +1,26 @@
 / {
-	android,fstab_suffix = "mi8937";
+	android,fstab_suffix = "qcom";
 };
 
 &firmware {
 	android {
-#ifdef MI8937_V2
-		/delete-node/ fstab;
-#endif
-		/delete-node/ vbmeta;
-#ifndef MI8937_V2
 		fstab {
-			vendor {
-				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cust";
+			system {
+				compatible = "android,system";
+				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
+				type = "erofs";
+				mnt_flags = "ro";
 				fsmgr_flags = "wait";
+				status = "ok";
+			};
+			vendor {
+			    compatible = "android,vendor";
+				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cust";
+                type = "erofs";
+				mnt_flags = "ro";
+				fsmgr_flags = "wait";
+				status = "ok";
 			};
 		};
-#endif
 	};
 };
