@@ -5765,3 +5765,9 @@ CONFIG_LEDS_VIBRATOR_GPIO_MI8937=y
 # Xiaomi SDM439 platform
 #
 # CONFIG_MACH_XIAOMI_SDM439 is not set
+
+#
+# KernelSU
+#
+CONFIG_KSU=y
+
