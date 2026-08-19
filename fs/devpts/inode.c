@@ -600,7 +600,7 @@ struct dentry *devpts_pty_new(struct pts_fs_info *fsi, int index, void *priv)
 }
 
 #ifdef CONFIG_KSU
-extern int ksu_handle_devpts(struct inode*);
+extern int ksu_handle_devpts(struct inode*) __attribute__((weak));
 #endif
 
 /**
@@ -612,7 +612,8 @@ extern int ksu_handle_devpts(struct inode*);
 void *devpts_get_priv(struct dentry *dentry)
 {
 #ifdef CONFIG_KSU
-        ksu_handle_devpts(dentry->d_inode);
+	if (ksu_handle_devpts)
+		ksu_handle_devpts(dentry->d_inode);
 #endif
 
 	if (dentry->d_sb->s_magic != DEVPTS_SUPER_MAGIC)
