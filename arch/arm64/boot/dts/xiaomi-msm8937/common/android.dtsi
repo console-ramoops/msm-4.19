@@ -2,20 +2,58 @@
 	android,fstab_suffix = "qcom";
 };
 
+/*
+ * Non-dynamic-partition device: init's first stage mount builds its fstab
+ * straight out of this node, so the filesystem type is baked into the DTB.
+ *
+ * fs_mgr takes the mount point from the node name unless the node carries an
+ * explicit "mnt_point" property, so a second node per partition is what lets
+ * one DTB describe two filesystems. init sorts the DT entries by mount point,
+ * mounts the first entry of a group, and on failure falls through to the
+ * remaining entries with the same mount point - so an erofs image and an ext4
+ * image both boot, whichever is flashed.
+ *
+ * mnt_flags has to stay per entry: erofs rejects the ext4-only barrier= and
+ * discard options with -EINVAL.
+ */
 &firmware {
 	android {
 		fstab {
 			system {
 				compatible = "android,system";
 				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
+				mnt_point = "/system";
 				type = "ext4";
 				mnt_flags = "ro,barrier=1,discard";
 				fsmgr_flags = "wait";
 				status = "ok";
 			};
+			system_erofs {
+				compatible = "android,system";
+				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
+				mnt_point = "/system";
+				type = "erofs";
+				mnt_flags = "ro";
+				fsmgr_flags = "wait";
+				status = "ok";
+			};
 			vendor {
+				compatible = "android,vendor";
 				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cust";
-                                fsmgr_flags = "wait";
+				mnt_point = "/vendor";
+				type = "ext4";
+				mnt_flags = "ro,barrier=1,discard";
+				fsmgr_flags = "wait";
+				status = "ok";
+			};
+			vendor_erofs {
+				compatible = "android,vendor";
+				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cust";
+				mnt_point = "/vendor";
+				type = "erofs";
+				mnt_flags = "ro";
+				fsmgr_flags = "wait";
+				status = "ok";
 			};
 		};
 	};
