@@ -1032,9 +1032,11 @@ EXPORT_SYMBOL(pagevec_lookup_range_nr_tag);
  */
 void __init swap_setup(void)
 {
-	page_cluster = 1;
 	/*
-	 * Right now other parts of the system means that we
-	 * _really_ don't want to cluster much more
+	 * Swap is backed by zram here, which has no seek cost for readahead
+	 * to amortise.  Every extra page in a cluster is an lz4 decompress, a
+	 * zsmalloc lookup and a page allocation that is wasted whenever the
+	 * page turns out not to be needed, so fault in one page at a time.
 	 */
+	page_cluster = 0;
 }
