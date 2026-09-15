@@ -465,7 +465,7 @@ static irqreturn_t bcl_handle_ibat(int irq, void *data)
 	irq_enabled = perph_data->irq_enabled;
 	mutex_unlock(&perph_data->state_trans_lock);
 
-	if (irq_enabled)
+	if (irq_enabled && perph_data->tz_dev)
 		of_thermal_handle_trip(perph_data->tz_dev);
 
 	return IRQ_HANDLED;
@@ -481,7 +481,7 @@ static irqreturn_t bcl_handle_vbat(int irq, void *data)
 	irq_enabled = perph_data->irq_enabled;
 	mutex_unlock(&perph_data->state_trans_lock);
 
-	if (irq_enabled)
+	if (irq_enabled && perph_data->tz_dev)
 		of_thermal_handle_trip(perph_data->tz_dev);
 
 	return IRQ_HANDLED;
@@ -727,7 +727,8 @@ static void bcl_evaluate_soc(struct work_struct *work)
 
 	perph_data->trip_val = battery_percentage;
 	mutex_unlock(&perph_data->state_trans_lock);
-	of_thermal_handle_trip(perph_data->tz_dev);
+	if (perph_data->tz_dev)
+		of_thermal_handle_trip(perph_data->tz_dev);
 
 	return;
 eval_exit:
