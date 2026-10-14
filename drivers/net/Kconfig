@@ -565,5 +565,6 @@ config NET_FAILOVER
 	  an alternate low latency datapath. It alsoenables live migration of
 	  a VM with direct attached VF by failing over to the paravirtual
 	  datapath when the VF is unplugged.
+source "drivers/net/oplus_vnet/Kconfig"
 
 endif # NETDEVICES
