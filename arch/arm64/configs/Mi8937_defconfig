@@ -5671,9 +5671,7 @@ CONFIG_RMNET_SHS=m
 CONFIG_MSMB_CAMERA_LEGACY=y
 
 #
-# Camera (Legacy Marshmallow)
-#
-CONFIG_MSMB_CAMERA_LEGACY_M=y
+# CONFIG_MSMB_CAMERA_LEGACY_M is not set
 
 #
 # Xiaomi MSM8937 platform
