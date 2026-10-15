@@ -276,6 +276,9 @@ int legacy_xiaomi_wingtech_eeprom_match_id(
 	int rc = 0;
 #endif
 
+	if (xiaomi_msm8937_mach_get() == XIAOMI_MSM8937_MACH_LAND)
+		return 0;
+
 	if (!strcmp(eb_info->eeprom_name, "s5k3l8_ofilm")) {
 		CDBG("match id for s5k3l8_ofilm\n");
 		if (e_ctrl->cal_data.mapdata[0] == 0x55) {
@@ -703,6 +706,9 @@ int legacy_xiaomi_wingtech_sensor_match_id(
 {
 	int rc = 0;
 
+	if (xiaomi_msm8937_mach_get() == XIAOMI_MSM8937_MACH_LAND)
+		return 0;
+
 	if (!strcmp(slave_info->sensor_name, "s5k3l8_ofilm")) {
 		if (main_module_id != 7) {
 			pr_err("failed: main_module_id %d, sensor is not %s",
@@ -861,6 +867,9 @@ void legacy_xiaomi_wingtech_sensor_read_fusion_id(
 	struct msm_camera_sensor_slave_info *slave_info,
 	struct msm_sensor_ctrl_t *s_ctrl)
 {
+	if (xiaomi_msm8937_mach_get() == XIAOMI_MSM8937_MACH_LAND)
+		return;
+
 	if (xiaomi_msm8937_mach_get() == XIAOMI_MSM8937_MACH_SANTONI) {
 		if (!strcmp(slave_info->sensor_name, "ov13855_sunny")) {
 			fusion_read_id_ov13855(s_ctrl);
