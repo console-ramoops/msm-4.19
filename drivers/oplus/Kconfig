@@ -22,4 +22,11 @@ config OPLUS_JANK_INFO
 	  Provides /proc/jank_info/cpu_jank_info for FrameBoost heuristics
 	  and core load tracking.
 
+config OPLUS_THEIA
+	bool "OPLUS Theia Stability and Project Telemetry"
+	default y
+	help
+	  Provides /proc/theiaPwkReport and /proc/oplusVersion nodes with
+	  dynamic project name discovery.
+
 endif
