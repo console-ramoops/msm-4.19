@@ -326,6 +326,7 @@ static int stat_info_show(struct seq_file *m, void *v)
 
 	si_meminfo(&si);
 #ifdef CONFIG_SWAP
+	si_swapinfo(&si);
 	total_swap_mb = si.totalswap >> (20 - PAGE_SHIFT);
 	free_swap_mb = si.freeswap >> (20 - PAGE_SHIFT);
 #endif
