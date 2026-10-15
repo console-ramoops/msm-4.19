@@ -15,4 +15,11 @@ config OPLUS_HEALTHINFO
 	  /proc/oplus_healthinfo to satisfy ColorOS Trinity Engine and
 	  PerformanceService.
 
+config OPLUS_JANK_INFO
+	bool "OPLUS CPU Jank and Core Load Monitoring"
+	default y
+	help
+	  Provides /proc/jank_info/cpu_jank_info for FrameBoost heuristics
+	  and core load tracking.
+
 endif
