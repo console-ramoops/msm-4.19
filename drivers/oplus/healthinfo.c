@@ -27,6 +27,7 @@
 #include <linux/delay.h>
 #include <linux/mutex.h>
 #include <linux/jiffies.h>
+#include <linux/swap.h>
 #include "healthinfo.h"
 
 /* Procfs directory entries */
@@ -482,6 +483,71 @@ static const struct file_operations proc_fg_uids_fops = {
 	.release = single_release,
 };
 
+/* Swappiness parameter tuning (/proc/oplus_healthinfo/swappiness_para) */
+static int direct_swappiness_val = 60;
+
+static int proc_swappiness_para_show(struct seq_file *m, void *v)
+{
+	seq_printf(m, "vm_swappiness: %d\n"
+		      "direct_swappiness: %d\n",
+		   vm_swappiness, direct_swappiness_val);
+	return 0;
+}
+
+static int proc_swappiness_para_open(struct inode *inode, struct file *file)
+{
+	return single_open(file, proc_swappiness_para_show, NULL);
+}
+
+static ssize_t proc_swappiness_para_write(struct file *file, const char __user *buffer,
+					  size_t count, loff_t *ppos)
+{
+	char kbuf[64];
+	char *pos, *val_str;
+	int val;
+
+	if (count >= sizeof(kbuf))
+		return -EINVAL;
+
+	if (copy_from_user(kbuf, buffer, count))
+		return -EFAULT;
+	kbuf[count] = '\0';
+
+	pos = strstr(kbuf, "direct_swappiness");
+	if (pos) {
+		val_str = strpbrk(pos, "= :\t");
+		if (val_str) {
+			val_str++;
+			while (*val_str == ' ' || *val_str == '\t' || *val_str == '=')
+				val_str++;
+			if (!kstrtoint(strstrip(val_str), 0, &val))
+				direct_swappiness_val = clamp(val, 0, 200);
+		}
+	} else if ((pos = strstr(kbuf, "vm_swappiness")) != NULL) {
+		val_str = strpbrk(pos, "= :\t");
+		if (val_str) {
+			val_str++;
+			while (*val_str == ' ' || *val_str == '\t' || *val_str == '=')
+				val_str++;
+			if (!kstrtoint(strstrip(val_str), 0, &val))
+				vm_swappiness = clamp(val, 0, 200);
+		}
+	} else {
+		if (!kstrtoint(strstrip(kbuf), 0, &val))
+			vm_swappiness = clamp(val, 0, 200);
+	}
+
+	return count;
+}
+
+static const struct file_operations proc_swappiness_para_fops = {
+	.open    = proc_swappiness_para_open,
+	.read    = seq_read,
+	.write   = proc_swappiness_para_write,
+	.llseek  = seq_lseek,
+	.release = single_release,
+};
+
 int __init oplus_healthinfo_init(void)
 {
 	healthinfo_dir = proc_mkdir("oplus_healthinfo", NULL);
@@ -507,6 +573,7 @@ int __init oplus_healthinfo_init(void)
 	proc_create("kswapd_loading", 0444, healthinfo_dir, &proc_kswapd_loading_fops);
 	proc_create("ufs_feature", 0444, healthinfo_dir, &proc_ufs_feature_fops);
 	proc_create("para_update", 0644, healthinfo_dir, &proc_para_update_fops);
+	proc_create("swappiness_para", 0644, healthinfo_dir, &proc_swappiness_para_fops);
 
 	sched_thresh_dir = proc_mkdir("sched_thresh", healthinfo_dir);
 	if (sched_thresh_dir) {
@@ -543,6 +610,7 @@ void __exit oplus_healthinfo_exit(void)
 	}
 
 	if (healthinfo_dir) {
+		remove_proc_entry("swappiness_para", healthinfo_dir);
 		remove_proc_entry("para_update", healthinfo_dir);
 		remove_proc_entry("ufs_feature", healthinfo_dir);
 		remove_proc_entry("kswapd_loading", healthinfo_dir);

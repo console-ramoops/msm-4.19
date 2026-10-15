@@ -386,7 +386,7 @@ static const struct file_operations name##_proc_fops = {		\
 	.release = single_release,					\
 }
 
-DEFINE_OPLUS_STR_NODE(prjName, "24081");
+DEFINE_OPLUS_STR_NODE(prjName, "23317");
 DEFINE_OPLUS_STR_NODE(prjVersion, "11");
 DEFINE_OPLUS_STR_NODE(pcbVersion, "PRE_EVB");
 DEFINE_OPLUS_STR_NODE(serialID, "0x0");
