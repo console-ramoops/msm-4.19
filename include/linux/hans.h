@@ -17,8 +17,14 @@
 
 #include <linux/freezer.h>
 #include <linux/cgroup.h>
+#include <linux/sched.h>
+#include <linux/sched/jobctl.h>
 #if defined(CONFIG_CFS_BANDWIDTH)
 #include "../../kernel/sched/sched.h"
+#endif
+
+#ifndef JOBCTL_TRAP_FREEZE
+#define JOBCTL_TRAP_FREEZE (1UL << 23)
 #endif
 
 #define HANS_NOERROR             (0)
