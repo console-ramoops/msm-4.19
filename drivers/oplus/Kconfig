@@ -35,4 +35,12 @@ config OPLUS_AFS_CONFIG
 	help
 	  Provides /proc/oplus_afs_config for Athena anti-freeze policy buffers.
 
+config OPLUS_NANDSWAP
+	bool "OPLUS Virtual zRAM-backed NANDswap Interface"
+	default y
+	help
+	  Provides /proc/nandswap and /proc/nandswap_vnd interfaces required by
+	  ColorOS / OxygenOS RAM Expansion framework, routing swap data cleanly
+	  into compressed zRAM without wear on eMMC storage.
+
 endif
