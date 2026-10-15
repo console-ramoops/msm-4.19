@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-2.0-only
+menuconfig OPLUS_FEATURE
+	bool "OPLUS Features"
+	default y
+	help
+	  Framework and telemetry support for OPlus / ColorOS / OxygenOS systems.
+
+if OPLUS_FEATURE
+
+config OPLUS_HEALTHINFO
+	bool "OPLUS Healthinfo and Resource Telemetry"
+	default y
+	help
+	  Exposes real-time CPU loading and latency statistics under
+	  /proc/oplus_healthinfo to satisfy ColorOS Trinity Engine and
+	  PerformanceService.
+
+endif
