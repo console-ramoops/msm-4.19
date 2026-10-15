@@ -29,4 +29,10 @@ config OPLUS_THEIA
 	  Provides /proc/theiaPwkReport and /proc/oplusVersion nodes with
 	  dynamic project name discovery.
 
+config OPLUS_AFS_CONFIG
+	bool "OPLUS Anti-Freeze Service Config"
+	default y
+	help
+	  Provides /proc/oplus_afs_config for Athena anti-freeze policy buffers.
+
 endif
